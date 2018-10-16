@@ -12,7 +12,7 @@ main()
     int m, status, inword, continu;
 
     int fd;
-    int n1, n2, n3;
+    int n1, n2;
     
     while(1) {
 
@@ -57,19 +57,19 @@ main()
         
         read(fd, buf, 80);
         
-        if ( (n2 = fork()) == 0 ) {
+        if ( (n1 = fork()) == 0 ) {
             read(fd, buf, 80);
             if ((n = creat("output.txt", 0750)) < 0)
                 exit(-1);
             close(1);
-            dup(n1);
-            close(n1);
+            dup(n);
+            close(n);
             execvp( argv[0], argv );
             exit(-1);
             printf ( " didn't exec \n ");
         }
 
-        n3 = wait(&status);
+        n2 = wait(&status);
 
     }
 }
