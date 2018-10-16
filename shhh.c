@@ -48,26 +48,25 @@ main()
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
              
-        int pipes[2];
-        pipe(pipes);
+        int p[2];
+        pipe(p);
         
         if ( fork() == 0 ) {
-            close(stdout);
-            close(pipe[0]);
-            dup2(pipe[1], stdout);
+            close(0);
+            close(p[0]);
+            close(p[1]);
+            dup(p[0]);
             execvp( argv[0], argv );
             printf ( " didn't exec \n ");
         }
-        
-        if ( fork == 0 ) {
-            close(stdin);
-            close(pipe[1]);
-            dup2( pipe[0], stdin);
-            execvp( argv[0], argv );
+        else {
+            close(1);
+            close(p[0]);
+            close(p[1]);
+            dup(p[1]);
+            execvp( argv[1], argv );
         }
         
-        close( pipe[0] );
-        close( pipe[1] );
         wait(&status);
 
     }
