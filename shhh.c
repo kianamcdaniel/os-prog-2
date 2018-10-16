@@ -57,7 +57,7 @@ main()
         
         read(fd, buf, 80);
         
-        if ( n2 = fork() == 0 ) {
+        if ( (n2 = fork()) == 0 ) {
             read(fd, buf, 80);
             if ((n = creat("output.txt", 0750)) < 0)
                 exit(-1);
