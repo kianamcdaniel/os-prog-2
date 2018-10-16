@@ -48,8 +48,8 @@ main()
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
              
-        int pipe[2];
-        pipe(pipe);
+        int pipes[2];
+        pipe(pipes);
         
         if ( fork() == 0 ) {
             close(stdout);
