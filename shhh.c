@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <signal.h>
 
 main()
 {
@@ -9,6 +10,9 @@ main()
 
     int m, status, inword, continu;
 
+    int fd;
+    int n, n1, n2;
+    
     while(1) {
 
         inword = 0;
@@ -34,7 +38,6 @@ main()
                     inword = 1;
                     argv[m++] = p;
                     *p++ = n;
-
                 }
                 else
                     *p++ = n;
@@ -46,13 +49,27 @@ main()
 
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
-
-        if ( fork() == 0 ) {
+        
+        if ((fd = open("input.txt", O_RDONLY)) == -1){
+            perror("open failed");
+        }
+        
+        read(fd, buf, 80);
+        
+        if ( n1 = fork() == 0 ) {
+            read(fd, buf, 80);
+            if ((n = creat("output.txt", 0750)) < 0)
+                exit(-1);
+            close(1);
+            dup(n);
+            close(n);
             execvp( argv[0], argv );
+            exit(-1);
             printf ( " didn't exec \n ");
         }
 
-        wait(&status);
+        n2 = wait(&status);
 
     }
 }
+
