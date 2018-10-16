@@ -2,8 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <signal.h>
-#include <fcntl.h>
+#include <unistd.h>
 
 main()
 {
@@ -48,11 +47,26 @@ main()
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
              
+        int pipe[2];
+        pipe(pipe);
+        
         if ( fork() == 0 ) {
+            close(stdout);
+            close(pipe[0]);
+            dup2(pipe[1], stdout);
             execvp( argv[0], argv );
             printf ( " didn't exec \n ");
         }
-
+        
+        if ( fork == 0 ) {
+            close(stdin);
+            close(pipe[1]);
+            dup2( pipe[0], stdin);
+            execvp( argv[0], argv );
+        }
+        
+        close( pipe[0] );
+        close( pipe[1] );
         wait(&status);
 
     }
