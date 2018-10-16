@@ -10,9 +10,6 @@ main()
     char *path, *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
-
-    int fd;
-    int n1, n2;
     
     while(1) {
 
@@ -50,26 +47,13 @@ main()
 
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
-        
-        if ((fd = open("input.txt", O_RDONLY)) == -1){
-            perror("open failed");
-        }
-        
-        read(fd, buf, 80);
-        
-        if ( (n1 = fork()) == 0 ) {
-            read(fd, buf, 80);
-            if ((n = creat("output.txt", 0750)) < 0)
-                exit(-1);
-            close(1);
-            dup(n);
-            close(n);
+             
+        if ( fork() == 0 ) {
             execvp( argv[0], argv );
-            exit(-1);
             printf ( " didn't exec \n ");
         }
 
-        n2 = wait(&status);
+        wait(&status);
 
     }
 }
