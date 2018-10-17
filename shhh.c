@@ -10,13 +10,13 @@
 
 main()
 {
-    char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
+    char *file, *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
     
     int fin, fout;
     
-    int args[20] = {0};
+    int args[20] = 0;
     
     int count, numPipes;
     pid_t pid;
@@ -37,9 +37,9 @@ main()
         
         fin = 0;
         fout = 0;
-        
-        printf( "\nshhh> ");
-        
+
+        printf( "\nshhh> \n");
+
         while ( ( n = getchar() ) != '\n'  || continu ) {
             if ( n ==  ' ' ) {
                 if ( inword ) {
@@ -68,20 +68,20 @@ main()
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
         
-        while (argv[count] != 0){             //while not at end of command line
-            if (strcmp(argv[count], "|") == 0){     //if arg is a pipe
-                argv[count] = 0;                    //set loc. of pipe to 0
-                args[numPipes + 1] = count + 1;        //save loc. of next arg
+        //while not at end of command line
+        while (argv[count] != 0){
+            if (strcmp(argv[count], "|") == 0){               //if arg is a pipe
+                argv[count] = 0;                         //set loc. of pipe to 0
+                args[numPipes + 1] = count + 1;          //save loc. of next arg
                 numPipes++;
             }
-            else if (strcmp(argv[count], "<") == 0){    //if arg is redirect in
-                path = strdup(argv[count + 1]);   //next arg will be in file name
+            else if (strcmp(argv[count], "<") == 0){               //redirect in
+                file = strdup(argv[count + 1]);                 //copy file name
                 argv[count] = 0;
-                argv[count + 1] = 0;
                 fin = 1;
             }
-            else if (strcmp(argv[count], ">") == 0){
-                path = strdup(argv[count + 1]);
+            else if (strcmp(argv[count], ">") == 0){              //redirect out
+                file = strdup(argv[count + 1]);                 //copy file name
                 argv[count] = 0;
                 argv[count + 1] = 0;
                 fout = 1;
@@ -105,28 +105,51 @@ main()
             }
             else if (pid == 0){
                 if((i == 0) && (fin == 1)){
-                    int input = open(path, O_RDONLY, 0600);
-                    dup2(input, 0);
-                    close(input);
+                    int input = open(file, O_RDONLY, 0600);
+                    dup2(input, 0);                            //read from input
+                    close(input);                                  //close input
                 }
             
                 if ((i == numPipes) && (fout == 1)){
-                    int output = open(path, O_WRONLY | O_CREAT, 0600);
-                    dup2(output, 1);
-                    close(output);
+                    int output = open(file, O_WRONLY | O_CREAT, 0600);
+                    dup2(output, 1);                           //write to output
+                    close(output);                                //close output
                 }
                 
-                execvp(argv[args[i]], &argv[args[i]]);
-                exit(1);
+                if (numPipes > 0){
+                    if (i == 0){
+                    //close std out, std out reassigned to std out of 2nd pipe
+                        dup2(pipe2[1], 1);
+                        close(pipe2[0]);
+                    }
+                    else if (i < numPipes){
+                    //close std in, std in reassigned to std in of 1st pipe
+                        dup2(pipe1[0], 0);
+                        close(pipe1[1]);
+                    //close std out, std out reassigned to std out of 2nd pipe
+                        dup2(pipe2[1], 1);
+                        close(pipe2[0]);
+                    }
+                    else {
+                    //close std in, std in reassiged to std in of 1st pipe
+                        dup2(pipe1[0], 0);
+                        close(pipe1[1]);
+                    }
+                }
+                execvp(argv[args[i]], &argv[args[i]]);         //execute command
             }
             else{
-                close(pipe1[0]);
-                close(pipe1[1]);
+                close(pipe1[0]);                          //close 1st pipe input
+                close(pipe1[1]);                         //close 1st pipe output
             }
-            pipe1[0] = pipe2[0];
+            pipe1[0] = pipe2[0];                            //now input of pipe
             pipe1[1] = pipe2[1];
         }
-                
+        
+        if (strcmp(argv[0], "exit") == 0){
+            exit(0);
+        }
+        
         for(int i = 0; i < 20; i++){
             argv[i] = 0;
         }
