@@ -16,7 +16,7 @@ main()
     
     int fin, fout;
     
-    int args[20] = 0;
+    int args[20] = {0};
     
     int count, numPipes;
     pid_t pid;
