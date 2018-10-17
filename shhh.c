@@ -102,13 +102,13 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
                 exit(1);
             }
             else if (pid == 0){
-                if((index == 0) && (fin == 1)){
+                if((i == 0) && (fin == 1)){
                     input = open(path, O_RDONLY, 0600);
                     dup2(input, 0);
                     close(input);
                 }
             
-                if ((index == pipes) && (fout == 1)){
+                if ((i == pipes) && (fout == 1)){
                     output = open(path, O_WRONLY | O_CREAT, 0600);
                     dup2(output, 1);
                     close(output);
