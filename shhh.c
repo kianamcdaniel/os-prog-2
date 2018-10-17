@@ -2,19 +2,21 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 main()
 {
-char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
+    char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
 
     int m, status, inword, continu;
     
-    int fin, fout, input, output;
+    int fin, fout;
     
-    int args[10] = {0};
+    int args[20] = 0;
     
     int count, numPipes;
     pid_t pid;
@@ -103,13 +105,13 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
             }
             else if (pid == 0){
                 if((i == 0) && (fin == 1)){
-                    input = open(path, O_RDONLY, 0600);
+                    int input = open(path, O_RDONLY, 0600);
                     dup2(input, 0);
                     close(input);
                 }
             
                 if ((i == numPipes) && (fout == 1)){
-                    output = open(path, O_WRONLY | O_CREAT, 0600);
+                    int output = open(path, O_WRONLY | O_CREAT, 0600);
                     dup2(output, 1);
                     close(output);
                 }
