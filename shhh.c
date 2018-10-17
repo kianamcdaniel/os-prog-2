@@ -24,7 +24,7 @@ main()
     int pipe1[2];
     int pipe2[2];
     
-    printf( "\nshhh> ");
+    
     
     while(1) {
 
@@ -39,6 +39,8 @@ main()
         
         fin = 0;
         fout = 0;
+        
+        printf( "\nshhh> ");
         
         while ( ( n = getchar() ) != '\n'  || continu ) {
             if ( n ==  ' ' ) {
@@ -125,9 +127,16 @@ main()
             pipe1[0] = pipe2[0];
             pipe1[1] = pipe2[1];
         }
-        wait(&status);
         
-        printf( "\nshhh> ");
+        if (strcmp(argv[0], "exit") == 0){
+            exit(0);
+        }
+        
+        for(int i = 0; i < 20; i++){
+            argv[i] = 0;
+        }
+        
+        wait(&status);
     }
 }
 
