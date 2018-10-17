@@ -14,7 +14,7 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
     
     int fin, fout, input, output;
     
-    int args[10] = 0;
+    int args[10] = {0};
     
     int count, numPipes;
     pid_t pid;
