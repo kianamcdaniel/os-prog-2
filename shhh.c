@@ -90,8 +90,8 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
             count++;
         }
         
-        for (int i = 0; i <= pipes; i++){
-            if(i < pipes){
+        for (int i = 0; i <= numPipes; i++){
+            if(i < numPipes){
                 pipe(pipe2);
             }
             
