@@ -93,7 +93,7 @@ main()
         }
         
         for (int i = 0; i <= numPipes; i++){
-            if(i < numPipes){
+            if ((numPipes > 0) && (i != numPipes)){
                 pipe(pipe2);
             }
             
