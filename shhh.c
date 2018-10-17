@@ -152,6 +152,7 @@ main()
             }
             pipe1[0] = pipe2[0];                            //now input of pipe
             pipe1[1] = pipe2[1];
+            wait(&status);
         }
         
         if (strcmp(argv[0], "exit") == 0){
@@ -162,7 +163,7 @@ main()
             argv[i] = 0;
         }
         
-        wait(&status);
+        
     }
 }
 
