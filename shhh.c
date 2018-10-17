@@ -119,23 +119,27 @@ main()
                 if (numPipes > 0){
                     if (i == 0){
                     //close std out, std out reassigned to std out of 2nd pipe
-                        dup2(pipe2[1], 1);
+                        close(1);
+                        dup(pipe2[1]);
                         close(pipe2[1]);
                         close(pipe2[0]);
                     }
                     else if (i < numPipes){
                     //close std in, std in reassigned to std in of 1st pipe
-                        dup2(pipe1[0], 0);
+                        close(0);
+                        dup(pipe1[0]);
                         close(pipe1[0]);
                         close(pipe1[1]);
                     //close std out, std out reassigned to std out of 2nd pipe
-                        dup2(pipe2[1], 1);
+                        close(1);
+                        dup(pipe2[1]);
                         close(pipe2[0]);
                         close(pipe2[1]);
                     }
                     else {
                     //close std in, std in reassiged to std in of 1st pipe
-                        dup2(pipe1[0], 0);
+                        close(0);
+                        dup(pipe1[0]);
                         close(pipe1[0]);
                         close(pipe1[1]);
                     }
