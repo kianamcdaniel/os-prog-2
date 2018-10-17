@@ -38,7 +38,7 @@ main()
         fin = 0;
         fout = 0;
 
-        printf( "\nshhh> ");
+        printf( "\nshhh> \n");
 
         while ( ( n = getchar() ) != '\n'  || continu ) {
             if ( n ==  ' ' ) {
