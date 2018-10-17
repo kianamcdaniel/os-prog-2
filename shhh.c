@@ -120,8 +120,8 @@ main()
                     if (i == 0){
                     //close std out, std out reassigned to std out of 2nd pipe
                         dup2(pipe2[1], 1);
-                        close(pipe2[0]);
                         close(pipe2[1]);
+                        close(pipe2[0]);
                     }
                     else if (i < numPipes){
                     //close std in, std in reassigned to std in of 1st pipe
