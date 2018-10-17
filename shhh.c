@@ -24,6 +24,8 @@ main()
     int pipe1[2];
     int pipe2[2];
     
+    printf( "\nshhh> ");
+    
     while(1) {
 
         inword = 0;
@@ -37,9 +39,7 @@ main()
         
         fin = 0;
         fout = 0;
-
-        printf( "\nshhh> ");
-
+        
         while ( ( n = getchar() ) != '\n'  || continu ) {
             if ( n ==  ' ' ) {
                 if ( inword ) {
@@ -126,6 +126,8 @@ main()
             pipe1[1] = pipe2[1];
         }
         wait(&status);
+        
+        printf( "\nshhh> ");
     }
 }
 
