@@ -117,6 +117,7 @@ main()
                 }
                 
                 execvp(argv[args[i]], &argv[args[i]]);
+                exit(1);
             }
             else{
                 close(pipe1[0]);
