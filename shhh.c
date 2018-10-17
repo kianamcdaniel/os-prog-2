@@ -69,7 +69,7 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
         while (argv[count] != 0){             //while not at end of command line
             if (strcmp(argv[count], "|") == 0){     //if arg is a pipe
                 argv[count] = 0;                    //set loc. of pipe to 0
-                args[pipes + 1] = count + 1;        //save loc. of next arg
+                args[numPipes + 1] = count + 1;        //save loc. of next arg
                 numPipes++;
             }
             else if (strcmp(argv[count], "<") == 0){    //if arg is redirect in
