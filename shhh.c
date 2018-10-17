@@ -32,7 +32,7 @@ main()
         continu=0;
         
         count = 0;
-        pipe = 0;
+        numPipes = 0;
         pid = 0;
         
         fin = 0;
