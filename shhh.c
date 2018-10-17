@@ -121,18 +121,22 @@ main()
                     //close std out, std out reassigned to std out of 2nd pipe
                         dup2(pipe2[1], 1);
                         close(pipe2[0]);
+                        close(pipe2[1]);
                     }
                     else if (i < numPipes){
                     //close std in, std in reassigned to std in of 1st pipe
                         dup2(pipe1[0], 0);
+                        close(pipe1[0]);
                         close(pipe1[1]);
                     //close std out, std out reassigned to std out of 2nd pipe
                         dup2(pipe2[1], 1);
                         close(pipe2[0]);
+                        close(pipe2[1]);
                     }
                     else {
                     //close std in, std in reassiged to std in of 1st pipe
                         dup2(pipe1[0], 0);
+                        close(pipe1[0]);
                         close(pipe1[1]);
                     }
                 }
@@ -157,4 +161,5 @@ main()
         wait(&status);
     }
 }
+
 
