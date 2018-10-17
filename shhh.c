@@ -24,8 +24,6 @@ main()
     int pipe1[2];
     int pipe2[2];
     
-    
-    
     while(1) {
 
         inword = 0;
@@ -132,9 +130,9 @@ main()
             exit(0);
         }
         
-        for(int i = 0; i < 20; i++){
+        /*for(int i = 0; i < 20; i++){
             argv[i] = 0;
-        }
+        }*/
         
         wait(&status);
     }
