@@ -126,13 +126,13 @@ main()
             pipe1[1] = pipe2[1];
         }
         
-        if (strcmp(argv[0], "exit") == 0){
+        /*if (strcmp(argv[0], "exit") == 0){
             exit(0);
-        }
-        
-        /*for(int i = 0; i < 20; i++){
-            argv[i] = 0;
         }*/
+        
+        for(int i = 0; i < 20; i++){
+            argv[i] = 0;
+        }
         
         wait(&status);
     }
