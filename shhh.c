@@ -135,7 +135,7 @@ main()
             argv[i] = 0;
         }
         
-        wait(&status);
+        wait(NULL);
     }
 }
 
