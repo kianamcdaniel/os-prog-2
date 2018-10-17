@@ -108,13 +108,13 @@ char *path, *argv[20], buf[80], n, *p;         //path is name of in/out file
                     close(input);
                 }
             
-                if ((i == pipes) && (fout == 1)){
+                if ((i == numPipes) && (fout == 1)){
                     output = open(path, O_WRONLY | O_CREAT, 0600);
                     dup2(output, 1);
                     close(output);
                 }
                 
-                execvp(argv[args[index]], &argv[args[index]]);
+                execvp(argv[args[i]], &argv[args[i]]);
             }
             else{
                 close(pipe1[0]);
