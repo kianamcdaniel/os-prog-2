@@ -92,10 +92,6 @@ main()
             count++;
         }
         
-        for(int i = 0; i < count; i++){
-            printf("%d ", &args[i]);
-        }
-        
         for (int i = 0; i <= numPipes; i++){
             if ((numPipes > 0) && (i != numPipes)){
                 pipe(pipe2);
