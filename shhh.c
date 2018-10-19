@@ -118,13 +118,13 @@ main()
                 }
                 
                 if(numPipes >0){
-                    if(index == 0){
+                    if(i == 0){
                         close(1);
                         dup(rp[1]);
                         close(rp[1]);
                         close(rp[0]);
                     }
-                    if(index < numPipes){
+                    if(i < numPipes){
                         close(0);
                         dup(lp[0]);
                         close(lp[0]);
