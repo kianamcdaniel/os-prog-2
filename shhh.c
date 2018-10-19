@@ -9,7 +9,7 @@
 
 int main()
 {
-    char *file, *argv[20], buf[80], n, *p;
+    char *inFile, *outFile, *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
     
@@ -75,12 +75,12 @@ int main()
                 numPipes++;
             }
             else if (strcmp(argv[count], "<") == 0){
-                file = strdup(argv[count + 1]);
+                inFile = strdup(argv[count + 1]);
                 argv[count] = 0;
                 fin = 1;
             }
             else if (strcmp(argv[count], ">") == 0){
-                file = strdup(argv[count + 1]);
+                outFile = strdup(argv[count + 1]);
                 argv[count] = 0;
                 fout = 1;
             }
@@ -103,14 +103,14 @@ int main()
             }
             else if (pid == 0){
                 if((i == 0) && (fin == 1)){
-                    int input = open(file, O_RDONLY, 0400);
+                    int input = open(inFile, O_RDONLY, 0400);
                     close(0);
                     dup(input);
                     close(input);
                 }
             
                 if ((i == numPipes) && (fout == 1)){
-                    int output = open(file, O_WRONLY | O_CREAT, 0600);
+                    int output = open(outFile, O_WRONLY | O_CREAT, 0600);
                     close(1);
                     dup(output);
                     close(output);
