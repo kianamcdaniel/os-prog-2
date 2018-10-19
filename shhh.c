@@ -117,7 +117,7 @@ main()
                     close(output);
                 }
                 
-                if(numPipes >0){
+                if(numPipes > 0){
                     if(i == 0){
                         close(1);
                         dup(rp[1]);
@@ -132,8 +132,8 @@ main()
                         
                         close(1);
                         dup(rp[1]);
-                        close(rp[0]);
                         close(rp[1]);
+                        close(rp[0]);
                     }
                     else{
                         close(0);
