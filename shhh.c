@@ -103,7 +103,7 @@ main()
                 exit(1);
             }
             else if (pid == 0){
-                if((i == 0) && (fin == 1)){
+                if ((i == 0) && (fin == 1)){
                     int input = open(file, O_RDONLY, 0600);
                     close(0);
                     dup(input);
@@ -117,14 +117,14 @@ main()
                     close(output);
                 }
                 
-                if(numPipes > 0){
-                    if(i == 0){
+                if (numPipes > 0){
+                    if (i == 0){
                         close(1);
                         dup(rp[1]);
                         close(rp[1]);
                         close(rp[0]);
                     }
-                    if(i < numPipes){
+                    else if (i < numPipes){
                         close(0);
                         dup(lp[0]);
                         close(lp[0]);
@@ -157,7 +157,7 @@ main()
             exit(0);
         }
         
-        for(int i = 0; i < 20; i++){
+        for (int i = 0; i < 20; i++){
             argv[i] = 0;
         }
     }
