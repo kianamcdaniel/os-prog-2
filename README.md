@@ -26,6 +26,7 @@ please follow the steps below to run my **shhh.c** program & check it's function
     - this will run shhh.c 
 5) 'shhh>' will be printed to the console, this is your prompt to enter a command 
 6) enter the following commands to test the functionality of the program
+      
       shhh> **ls**
       
       shhh> **ls -t -al**
