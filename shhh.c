@@ -131,8 +131,8 @@ int main()
                         
                         close(1);
                         dup(rp[1]);
-                        close(rp[0]);
                         close(rp[1]);
+                        close(rp[0]);
                     }
                     else{
                         close(0);
@@ -152,8 +152,12 @@ int main()
             wait(&status);
         }
         
-        for(int k = 0; k < 20; k++){
-            argv[k] = 0;
+        for(int i = 0; i < 20; i++){
+            argv[i] = 0;
+        }
+        
+        for(int i = 0; i < 20; i++){
+            args[i] = 0;
         }
     }
 }
