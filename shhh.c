@@ -7,8 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int main()
-{
+int main() {
     char *inFile, *outFile, *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
@@ -38,7 +37,7 @@ int main()
         fout = 0;
 
         printf( "\nshhh> ");
-
+        
         while ( ( n = getchar() ) != '\n'  || continu ) {
             if ( n ==  ' ' ) {
                 if ( inword ) {
