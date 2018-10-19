@@ -132,8 +132,8 @@ main()
                         
                         close(1);
                         dup(rp[1]);
-                        close(rp[1]);
                         close(rp[0]);
+                        close(rp[1]);
                     }
                     else{
                         close(0);
