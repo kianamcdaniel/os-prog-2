@@ -113,8 +113,8 @@ main()
                 if ((i == numPipes) && (fout == 1)){
                     int output = open(file, O_WRONLY | O_CREAT, 0600);
                     close(0);
-                    dup(input);
-                    close(input);
+                    dup(output);
+                    close(output);
                 }
                 
                 if(numPipes >0){
