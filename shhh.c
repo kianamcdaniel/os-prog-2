@@ -75,12 +75,12 @@ int main()
                 numPipes++;
             }
             else if (strcmp(argv[count], "<") == 0){
-                inFile = strdup(argv[count + 1]);
+                file = strdup(argv[count + 1]);
                 argv[count] = 0;
                 fin = 1;
             }
             else if (strcmp(argv[count], ">") == 0){
-                outFile = strdup(argv[count + 1]);
+                file = strdup(argv[count + 1]);
                 argv[count] = 0;
                 fout = 1;
             }
