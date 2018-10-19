@@ -45,3 +45,7 @@ please follow the steps below to run my **shhh.c** program & check it's function
       shhh> **./pre < input.txt | ./sort > output.txt**
       
       shhh> **cat output.txt**
+      
+      shhh> **exit**                    (to exit the program)
+ 
+
