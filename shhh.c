@@ -21,8 +21,8 @@ main()
     int count, numPipes;
     pid_t pid;
     
-    int pipe1[2];
-    int pipe2[2];
+    int lp[2];
+    int rp[2];
     
     while(1) {
 
@@ -68,22 +68,21 @@ main()
         if ( strcmp(argv[0],"exit") == 0 )
             exit (0);
         
-        //while not at end of command line
+        //pre-processing
         while (argv[count] != 0){
-            if (strcmp(argv[count], "|") == 0){               //if arg is a pipe
-                argv[count] = 0;                         //set loc. of pipe to 0
-                args[numPipes + 1] = count + 1;          //save loc. of next arg
+            if (strcmp(argv[count], "|") == 0){
+                argv[count] = 0;
+                args[numPipes + 1] = count + 1;
                 numPipes++;
             }
-            else if (strcmp(argv[count], "<") == 0){               //redirect in
-                file = strdup(argv[count + 1]);                 //copy file name
+            else if (strcmp(argv[count], "<") == 0){
+                file = strdup(argv[count + 1]);
                 argv[count] = 0;
                 fin = 1;
             }
-            else if (strcmp(argv[count], ">") == 0){              //redirect out
-                file = strdup(argv[count + 1]);                 //copy file name
+            else if (strcmp(argv[count], ">") == 0){
+                file = strdup(argv[count + 1]);
                 argv[count] = 0;
-                argv[count + 1] = 0;
                 fout = 1;
             }
             else{
@@ -94,7 +93,7 @@ main()
         
         for (int i = 0; i <= numPipes; i++){
             if ((numPipes > 0) && (i != numPipes)){
-                pipe(pipe2);
+                pipe(rp);
             }
             
             pid = fork();
@@ -106,24 +105,51 @@ main()
             else if (pid == 0){
                 if((i == 0) && (fin == 1)){
                     int input = open(file, O_RDONLY, 0600);
-                    dup2(input, 0);                            //read from input
-                    close(input);                                  //close input
+                    close(0);
+                    dup(input);
+                    close(input);
                 }
             
                 if ((i == numPipes) && (fout == 1)){
                     int output = open(file, O_WRONLY | O_CREAT, 0600);
-                    dup2(output, 1);                           //write to output
-                    close(output);                                //close output
+                    close(0);
+                    dup(input);
+                    close(input);
                 }
                 
-                execvp(argv[args[i]], &argv[args[i]]);         //execute command
+                if(numPipes >0){
+                    if(index == 0){
+                        close(1);
+                        dup(rp[1]);
+                        close(rp[1]);
+                        close(rp[0]);
+                    }
+                    if(index < numPipes){
+                        close(0);
+                        dup(lp[0]);
+                        close(lp[0]);
+                        close(lp[1]);
+                        
+                        close(1);
+                        dup(rp[1]);
+                        close(rp[1]);
+                        close(rp[0]);
+                    }
+                    else{
+                        close(0);
+                        dup(lp[0]);
+                        close(lp[0]);
+                        close(lp[1]);
+                    }
+                }
+                execvp(argv[args[i]], &argv[args[i]]);
             }
             else{
-                close(pipe1[0]);                          //close 1st pipe input
-                close(pipe1[1]);                         //close 1st pipe output
+                close(lp[0]);
+                close(lp[1]);
             }
-            pipe1[0] = pipe2[0];                            //now input of pipe
-            pipe1[1] = pipe2[1];
+            lp[0] = rp[0];
+            lp[1] = rp[1];
             wait(&status);
         }
         
@@ -134,8 +160,6 @@ main()
         for(int i = 0; i < 20; i++){
             argv[i] = 0;
         }
-        
-        
     }
 }
 
