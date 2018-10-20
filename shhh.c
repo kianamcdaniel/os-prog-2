@@ -61,7 +61,7 @@ int main (){
         *p++ = 0;
         argv[m] = 0;
         
-        if(strcmp(argv[0]), "exit") == 0) exit(0);
+        if(strcmp(argv[0], "exit") == 0) exit(0);
         
         //pre-processing
         while(argv[count] != 0){
@@ -124,7 +124,7 @@ int main (){
                         close(lp[0]);
                         close(lp[1]);
                         
-                        close(1)
+                        close(1);
                         dup(rp[1]);
                         close(rp[1]);
                         close(rp[0]);
