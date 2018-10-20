@@ -104,7 +104,7 @@ int main()
             }
             else if (pid == 0){
                 if((i == 0) && (fin == 1)){
-                    int input = open(inFile, O_RDONLY, 0600);
+                    int input = open(inFile, O_RDONLY, 0400);
                     close(0);
                     dup(input);
                     close(input);
