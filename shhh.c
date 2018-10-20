@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int main() {
+main() {
     char *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
