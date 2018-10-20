@@ -9,10 +9,11 @@
 
 int main()
 {
-    char *inFile, *outFile, *argv[20], buf[80], n, *p;
+    char *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
     
+    char *inFile, *outFile;
     int fin, fout;
     
     int args[20] = {0};
@@ -28,7 +29,7 @@ int main()
         inword = 0;
         p = buf;
         m = 0;
-        continu=0;
+        continu = 0;
         
         count = 0;
         numPipes = 0;
@@ -154,6 +155,10 @@ int main()
         
         for(int i = 0; i < 20; i++){
             argv[i] = 0;
+        }
+        
+        for(int i = 0; i < 20; i++){
+            args[i] = 0;
         }
     }
 }
