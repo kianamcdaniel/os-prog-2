@@ -7,193 +7,161 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-#ifndef READ
-#define READ 0
-#endif
+int main()
+{
+    char *argv[20], buf[80], n, *p;
 
-#ifndef WRITE
-#define WRITE 1
-#endif
-
-int main() {
-    /* variables for command parsing and storage*/
-    char n, *parser, buf[80], *argv[20];
     int m, status, inword, continu;
     
-    /* variables and flags for redirection (note: C does not have type bool; using integer value 0 or 1) */
-    char *in_path, *out_path;
-    int inputRedirectFlag, outputRedirectFlag;
+    char *inFile, *outFile;
+    int fin, fout;
     
-    /* variables for piping */
-    int count, pipes;
+    int args[20] = {0};
+    
+    int count, numPipes;
     pid_t pid;
     
-    /* left and right pipes */
-    int l_pipe[2], r_pipe[2];
+    int lp[2];
+    int rp[2];
     
-    /* container for recording argument locations in argv[] */
-    int argLocation[20] = { 0 };
-    
-    while (1) {
+    while(1) {
+
+        inword = 0;
+        p = buf;
+        m = 0;
+        continu = 0;
         
-        /* reset parsing and piping variable values */
-        m = inword = continu = count = pipes = pid = 0;
+        count = 0;
+        numPipes = 0;
+        pid = 0;
         
-        /* begin parsing at beginning of buffer */
-        parser = buf;
-        
-        /* reset redirection flags */
-        inputRedirectFlag = outputRedirectFlag = 0;
-        
-        /* print shell prompt */
-        printf("\nshhh> ");
-        
-        /* parse commands */
-        while ((n = getchar()) != '\n' || continu)
-        {
-            if (n == ' ') {
-                if (inword)
-                {
+        fin = 0;
+        fout = 0;
+
+        printf( "\nshhh> ");
+
+        while ( ( n = getchar() ) != '\n'  || continu ) {
+            if ( n ==  ' ' ) {
+                if ( inword ) {
                     inword = 0;
-                    *parser++ = 0;
+                    *p++ = 0;
                 }
             }
-            else if (n == '\n')
+            else if ( n == '\n' )
                 continu = 0;
-            else if (n == '\\' && !inword)
+            else if ( n == '\\' && !inword )
                 continu = 1;
             else {
-                if (!inword)
-                {
+                if ( !inword ) {
                     inword = 1;
-                    argv[m++] = parser;
-                    *parser++ = n;
+                    argv[m++] = p;
+                    *p++ = n;
                 }
                 else
-                    *parser++ = n;
+                    *p++ = n;
             }
-        } /* end of command parsing */
-        
-        /* append terminating character to end of parser buffer and argv buffer */
-        *parser++ = 0;
+        }
+
+        printf("I'm here);
+               
+        *p++ = 0;
         argv[m] = 0;
         
-        /* user wishes to terminate program */
-        if (strcmp(argv[0], "exit") == 0)
-            exit(0);
+        if ( strcmp(argv[0],"exit") == 0 )
+            exit (0);
         
-        /* manage redirection */
-        while (argv[count] != 0) {
-            if (strcmp(argv[count], "|") == 0) {
+        //pre-processing
+        while (argv[count] != 0){
+            if (strcmp(argv[count], "|") == 0){
                 argv[count] = 0;
-                argLocation[pipes + 1] = count + 1;
-                ++pipes;
+                args[numPipes + 1] = count + 1;
+                numPipes++;
             }
-            else if (strcmp(argv[count], "<") == 0) {
-                in_path = strdup(argv[count + 1]);
+            else if (strcmp(argv[count], "<") == 0){
+                inFile = strdup(argv[count + 1]);
                 argv[count] = 0;
-                inputRedirectFlag = 1;
+                fin = 1;
             }
-            else if (strcmp(argv[count], ">") == 0) {
-                out_path = strdup(argv[count + 1]);
+            else if (strcmp(argv[count], ">") == 0){
+                outFile = strdup(argv[count + 1]);
                 argv[count] = 0;
-                outputRedirectFlag = 1;
+                fout = 1;
             }
-            else {
-                argLocation[count] = count;
+            else{
+                args[count] = count;
+            }
+            count++;
+        }
+        
+        for (int i = 0; i <= numPipes; i++){
+            if ((numPipes > 0) && (i != numPipes)){
+                pipe(rp);
             }
             
-            ++count;
-        } /* end of redirection management */
-        
-        /* execute commands [<= in for-loop; n pipes require n+1 processes] */
-        for (int index = 0; index <= pipes; ++index) {
-            if (pipes > 0 && index != pipes) { /* if user has entered multiple commands with '|' */
-                pipe(r_pipe); /* no pipe(l_pipe); r_pipe becomes next child's l_pipe */
-            }
+            pid = fork();
             
-            /* switch-statement for command execution */
-            switch (pid = fork()) {
-                case -1: perror("fork failed"); /* fork() error */
-                    break;
-                    
-                case 0: /* child process manages redirection and executes */
-                    if ((index == 0) && (inputRedirectFlag == 1)) {
-                        int inputFileDescriptor = open(in_path, O_RDONLY , 0400);
-                        if (inputFileDescriptor == -1) {
-                            perror("input file failed to open\n");
-                            return(EXIT_FAILURE);
-                        }
-                        close(READ);
-                        dup(inputFileDescriptor);
-                        close(inputFileDescriptor);
-                    } /* end of input redirection management */
-                    
-                    if ((index == pipes) && (outputRedirectFlag == 1)) {
-                        //printf("DEBUG: here we should be about to create our output file\n");
-                        int outputFileDescriptor = creat(out_path, 0700);
-                        if (outputFileDescriptor < 0) {
-                            perror("output file failed to open\n");
-                            return(EXIT_FAILURE);
-                        }
-                        close(WRITE);
-                        dup(outputFileDescriptor);
-                        close(outputFileDescriptor);
-                    } /* end of output redirection management */
-                    
-                    /* manage pipes if (a) first child process, (b) in-between child process, or (c) final child process */
-                    if (pipes > 0) {
-                        if (index == 0){ /* first child process */
-                            close(WRITE);
-                            dup(r_pipe[WRITE]);
-                            close(r_pipe[WRITE]);
-                            close(r_pipe[READ]);
-                        }
-                        else if (index < pipes) { /* in-between child process */
-                            close(READ);
-                            dup(l_pipe[READ]);
-                            close(l_pipe[READ]);
-                            close(l_pipe[WRITE]);
-                            close(WRITE);
-                            dup(r_pipe[WRITE]);
-                            close(r_pipe[READ]);
-                            close(r_pipe[WRITE]);
-                        }
-                        else { /* final child process */
-                            close(READ);
-                            dup(l_pipe[READ]);
-                            close(l_pipe[READ]);
-                            close(l_pipe[WRITE]);
-                        }
+            if (pid < 0){
+                printf("ERROR");
+                exit(1);
+            }
+            else if (pid == 0){
+                if((i == 0) && (fin == 1)){
+                    int input = open(inFile, O_RDONLY, 0400);
+                    close(0);
+                    dup(input);
+                    close(input);
+                }
+            
+                if ((i == numPipes) && (fout == 1)){
+                    int output = open(outFile, O_WRONLY | O_CREAT, 0600);
+                    close(1);
+                    dup(output);
+                    close(output);
+                }
+                
+                if (numPipes > 0){
+                    if (i == 0){
+                        close(1);
+                        dup(rp[1]);
+                        close(rp[1]);
+                        close(rp[0]);
                     }
-                    
-                    /* execute command */
-                    execvp(argv[argLocation[index]], &argv[argLocation[index]]);
-                    
-                    /* if execvp() fails */
-                    perror("execution of command failed\n");
-                    
-                    break;
-                    
-                default: /* parent process manages the pipes for child process(es) */
-                    if (index > 0) {
-                        close(l_pipe[READ]);
-                        close(l_pipe[WRITE]);
+                    else if (i < numPipes){
+                        close(0);
+                        dup(lp[0]);
+                        close(lp[0]);
+                        close(lp[1]);
+                        
+                        close(1);
+                        dup(rp[1]);
+                        close(rp[1]);
+                        close(rp[0]);
                     }
-                    l_pipe[READ] = r_pipe[READ];
-                    l_pipe[WRITE] = r_pipe[WRITE];
-                    
-                    /* parent waits for child process to complete */
-                    wait(&status);
-                    
-                    break;
-            } /* end of switch-statement for command execution */
-        } /* end of loop for all pipes */
+                    else{
+                        close(0);
+                        dup(lp[0]);
+                        close(lp[0]);
+                        close(lp[1]);
+                    }
+                }
+                execvp(argv[args[i]], &argv[args[i]]);
+            }
+            else{
+                close(lp[0]);
+                close(lp[1]);
+            }
+            lp[0] = rp[0];
+            lp[1] = rp[1];
+            wait(&status);
+        }
         
-        // clear all executed commands
-        for (int i = 0; i < 20; ++i) {
+        for(int i = 0; i < 20; i++){
             argv[i] = 0;
         }
+        
+        /*for(int i = 0; i < 20; i++){
+            args[i] = 0;
+        }*/
     }
 }
 
