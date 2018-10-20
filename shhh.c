@@ -7,8 +7,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int main()
-{
+int main() {
     char *argv[20], buf[80], n, *p;
 
     int m, status, inword, continu;
@@ -61,9 +60,7 @@ int main()
                     *p++ = n;
             }
         }
-
-        printf("I'm here);
-               
+        
         *p++ = 0;
         argv[m] = 0;
         
@@ -158,10 +155,6 @@ int main()
         for(int i = 0; i < 20; i++){
             argv[i] = 0;
         }
-        
-        /*for(int i = 0; i < 20; i++){
-            args[i] = 0;
-        }*/
     }
 }
 
