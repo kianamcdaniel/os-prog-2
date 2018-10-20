@@ -16,7 +16,7 @@ int main()
     char *inFile, *outFile;
     int fin, fout;
     
-    int args[20] = {0};
+    int args[20] = { 0 };
     
     int count, numPipes;
     pid_t pid;
@@ -61,7 +61,7 @@ int main()
                     *p++ = n;
             }
         }
-               
+        
         *p++ = 0;
         argv[m] = 0;
         
