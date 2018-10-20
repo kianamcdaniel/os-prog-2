@@ -61,8 +61,6 @@ int main()
                     *p++ = n;
             }
         }
-
-        printf("I'm here);
                
         *p++ = 0;
         argv[m] = 0;
