@@ -14,8 +14,6 @@
 #define WRITE 1
 #endif
 
-void clearArgIndexContainer (int argLocation[]);
-
 int main() {
     /* variables for command parsing and storage*/
     char n, *parser, buf[80], *argv[20];
