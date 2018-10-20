@@ -87,8 +87,9 @@ int main (){
         }
         
         for(int i = 0; i <= numPipes; i++){
-            if((numPipes > 0) && (i != numPipes))
+            if((numPipes > 0) && (i != numPipes)){
                 pipe(rp);
+            }
             
             pid = fork();
             
