@@ -111,7 +111,7 @@ int main()
                 }
             
                 if ((i == numPipes) && (fout == 1)){
-                    int output = open(outFile, O_WRONLY | O_CREAT, 0600);
+                    int output = creat(outFile, 0700);
                     close(1);
                     dup(output);
                     close(output);
