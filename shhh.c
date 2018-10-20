@@ -73,7 +73,7 @@ int main()
             if (strcmp(argv[count], "|") == 0){
                 argv[count] = 0;
                 args[numPipes + 1] = count + 1;
-                numPipes++;
+                ++numPipes;
             }
             else if (strcmp(argv[count], "<") == 0){
                 inFile = strdup(argv[count + 1]);
@@ -88,10 +88,10 @@ int main()
             else{
                 args[count] = count;
             }
-            count++;
+            ++count;
         }
         
-        for (int i = 0; i <= numPipes; i++){
+        for (int i = 0; i <= numPipes; ++i){
             if ((numPipes > 0) && (i != numPipes)){
                 pipe(rp);
             }
@@ -153,7 +153,7 @@ int main()
             wait(&status);
         }
         
-        for(int i = 0; i < 20; i++){
+        for(int i = 0; i < 20; ++i){
             argv[i] = 0;
         }
     }
