@@ -62,6 +62,8 @@ int main()
             }
         }
 
+        printf("I'm here");
+        
         *p++ = 0;
         argv[m] = 0;
         
