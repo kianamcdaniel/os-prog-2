@@ -153,9 +153,9 @@ int main()
             wait(&status);
         }
         
-        for(int i = 0; i < 20; i++){
+        /*for(int i = 0; i < 20; i++){
             argv[i] = 0;
-        }
+        }*/
     }
 }
 
