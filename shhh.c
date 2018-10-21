@@ -145,12 +145,14 @@ int main()
                 execvp(argv[args[i]], &argv[args[i]]);
             }
             else{
-                close(lp[0]);
-                close(lp[1]);
+                if(i > 0){
+                    close(lp[0]);
+                    close(lp[1]);
+                }
+                lp[0] = rp[0];
+                lp[1] = rp[1];
+                wait(&status);
             }
-            lp[0] = rp[0];
-            lp[1] = rp[1];
-            wait(&status);
         }
         
         for(int i = 0; i < 20; ++i){
